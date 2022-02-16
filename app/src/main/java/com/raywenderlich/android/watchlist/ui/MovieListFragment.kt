@@ -72,7 +72,7 @@ class MovieListFragment: Fragment() {
     })
     binding.movieRecyclerview.adapter = movieAdapter
 
-    val movieApi = ApiProvider.getMovieApi()
+    val movieApi = ApiProvider.getMovieApi(requireContext())
 
     movieApi.getPopularMovies().enqueue(object : Callback<MovieApiResponse> {
       override fun onFailure(call: Call<MovieApiResponse>, t: Throwable) {

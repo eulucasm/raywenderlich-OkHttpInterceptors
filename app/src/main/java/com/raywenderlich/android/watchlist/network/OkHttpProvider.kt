@@ -34,6 +34,8 @@
 
 package com.raywenderlich.android.watchlist.network
 
+import android.content.Context
+import com.raywenderlich.android.watchlist.network.intercetors.AnalyticsInterceptor
 import com.raywenderlich.android.watchlist.network.intercetors.ApiKeyInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -47,7 +49,7 @@ object OkHttpProvider {
 
    private var okHttpClient: OkHttpClient? = null
 
-   fun getOkHttpClient(): OkHttpClient {
+   fun getOkHttpClient(context: Context): OkHttpClient {
       return if (okHttpClient == null) {
          val loggingInterceptor =
             HttpLoggingInterceptor { message -> Timber.tag("OkHttp").d(message) }
@@ -56,6 +58,7 @@ object OkHttpProvider {
             .readTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
             .connectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
             .addInterceptor(ApiKeyInterceptor())
+            .addInterceptor(AnalyticsInterceptor(context))
             .addInterceptor(loggingInterceptor)
             .build()
          OkHttpProvider.okHttpClient = okHttpClient

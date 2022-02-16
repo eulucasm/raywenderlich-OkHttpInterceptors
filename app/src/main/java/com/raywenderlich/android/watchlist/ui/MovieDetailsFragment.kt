@@ -34,6 +34,7 @@
 
 package com.raywenderlich.android.watchlist.ui
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -72,7 +73,7 @@ class MovieDetailsFragment: Fragment(R.layout.fragment_movie_details) {
     val args = MovieDetailsFragmentArgs.fromBundle(bundle)
     val movieId = args.movieId
 
-    val movieApi = ApiProvider.getMovieApi()
+    val movieApi = ApiProvider.getMovieApi(requireContext())
 
     movieApi.getMovieDetails(id = movieId).enqueue(object : Callback<MovieDetailsModel> {
       override fun onFailure(call: Call<MovieDetailsModel>, t: Throwable) {
@@ -91,6 +92,7 @@ class MovieDetailsFragment: Fragment(R.layout.fragment_movie_details) {
     })
   }
 
+  @SuppressLint("StringFormatMatches")
   private fun showMovieDetails(movieDetails: MovieDetailsModel) {
     binding.movieDetailsContainer.visibility = View.VISIBLE
     binding.progressBar.visibility = View.GONE
