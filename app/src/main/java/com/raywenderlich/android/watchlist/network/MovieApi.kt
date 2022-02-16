@@ -44,9 +44,9 @@ import retrofit2.http.Query
 
 interface MovieApi {
 
-  @GET("/3/movie/popular")
-  fun getPopularMovies(@Query("api_key") api_key: String = BuildConfig.THE_MOVIE_DB_API_TOKEN): Call<MovieApiResponse>
+   @GET("/3/movie/popular")
+   fun getPopularMovies(): Call<MovieApiResponse>
 
-  @GET("/3/movie/{id}")
-  fun getMovieDetails(@Path("id") id: Long): Call<MovieDetailsModel>
+   @GET("/3/movie/{id}")
+   fun getMovieDetails(@Path("id") id: Long): Call<MovieDetailsModel>
 }

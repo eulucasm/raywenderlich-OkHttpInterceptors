@@ -34,26 +34,34 @@
 
 package com.raywenderlich.android.watchlist.network
 
+import com.raywenderlich.android.watchlist.network.intercetors.ApiKeyInterceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
 object OkHttpProvider {
 
-  // Timeout for the network requests
-  private const val REQUEST_TIMEOUT = 3L
+   // Timeout for the network requests
+   private const val REQUEST_TIMEOUT = 3L
 
-  private var okHttpClient: OkHttpClient? = null
+   private var okHttpClient: OkHttpClient? = null
 
-  fun getOkHttpClient(): OkHttpClient {
-    return if (okHttpClient == null) {
-      val okHttpClient = OkHttpClient.Builder()
-          .readTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
-          .connectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
-          .build()
-      OkHttpProvider.okHttpClient = okHttpClient
-      okHttpClient
-    } else {
-      okHttpClient!!
-    }
-  }
+   fun getOkHttpClient(): OkHttpClient {
+      return if (okHttpClient == null) {
+         val loggingInterceptor =
+            HttpLoggingInterceptor { message -> Timber.tag("OkHttp").d(message) }
+         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+         val okHttpClient = OkHttpClient.Builder()
+            .readTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
+            .connectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS)
+            .addInterceptor(ApiKeyInterceptor())
+            .addInterceptor(loggingInterceptor)
+            .build()
+         OkHttpProvider.okHttpClient = okHttpClient
+         okHttpClient
+      } else {
+         okHttpClient!!
+      }
+   }
 }
